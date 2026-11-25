@@ -51,9 +51,10 @@ details summary{font-weight:700;cursor:pointer;font-size:15px}
 </div>
 <script>
 const DEF={"A+":4,"A":4,"A-":3.7,"B+":3.3,"B":3,"B-":2.7,"C+":2.3,"C":2,"C-":1.7,"D+":1.3,"D":1,"F":0};
-const DR=[[93,4],[90,3.7],[87,3.3],[83,3],[80,2.7],[77,2.3],[73,2],[70,1.7],[67,1.3],[60,1],[0,0]];
+const DR=[[93,4],[89,3.7],[84,3.3],[80,3],[76,2.7],[73,2.3],[70,2],[67,1.7],[64,1.3],[60,1],[0,0]];
+const OLDDR=JSON.stringify([[93,4],[90,3.7],[87,3.3],[83,3],[80,2.7],[77,2.3],[73,2],[70,1.7],[67,1.3],[60,1],[0,0]]);
 let S=JSON.parse(localStorage.getItem('gpa')||'null')||{scale:{...DEF},courses:[{n:'',h:3,g:'A'},{n:'',h:3,m:'s',sc:'85',mx:'100'},{n:'',h:3,g:'B'}],pg:'',ph:''};
-S.ranges=S.ranges||DR.map(r=>[...r]);
+S.ranges=(!S.ranges||JSON.stringify(S.ranges)===OLDDR)?DR.map(r=>[...r]):S.ranges;
 const $=id=>document.getElementById(id);
 const save=()=>localStorage.setItem('gpa',JSON.stringify(S));
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}

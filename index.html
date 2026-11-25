@@ -2,7 +2,16 @@
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f766e"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
-<title>حاسبة المعدل التراكمي</title>
+<title>حاسبة المعدل التراكمي GPA للجامعات المصرية | GPA Calculator Egypt</title>
+<meta name="description" content="احسب معدلك الفصلي والتراكمي GPA بنظام الساعات المعتمدة في الجامعات المصرية، من الدرجة من 100 أو من التقدير (A, B+...). مجانية وتعمل على الموبايل. Free Egyptian GPA calculator, credit-hour system, 4.0 scale.">
+<meta name="keywords" content="حاسبة المعدل التراكمي, حساب GPA, حساب المعدل الفصلي, حاسبة GPA الجامعة المصرية, نظام الساعات المعتمدة, Egypt GPA calculator, credit hour GPA calculator">
+<link rel="canonical" href="https://eng-abdallahmostafa.github.io/gpa-calculator/">
+<meta name="robots" content="index,follow">
+<link rel="alternate" hreflang="ar" href="https://eng-abdallahmostafa.github.io/gpa-calculator/">
+<meta property="og:type" content="website"><meta property="og:locale" content="ar_EG"><meta property="og:url" content="https://eng-abdallahmostafa.github.io/gpa-calculator/">
+<meta property="og:title" content="حاسبة المعدل التراكمي GPA للجامعات المصرية | GPA Calculator Egypt"><meta property="og:description" content="احسب معدلك الفصلي والتراكمي GPA بنظام الساعات المعتمدة في الجامعات المصرية، من الدرجة من 100 أو من التقدير (A, B+...). مجانية وتعمل على الموبايل. Free Egyptian GPA calculator, credit-hour system, 4.0 scale.">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="حاسبة المعدل التراكمي GPA للجامعات المصرية | GPA Calculator Egypt"><meta name="twitter:description" content="احسب معدلك الفصلي والتراكمي GPA بنظام الساعات المعتمدة في الجامعات المصرية، من الدرجة من 100 أو من التقدير (A, B+...). مجانية وتعمل على الموبايل. Free Egyptian GPA calculator, credit-hour system, 4.0 scale.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"حاسبة المعدل التراكمي GPA","alternateName":"Egyptian GPA Calculator","url":"https://eng-abdallahmostafa.github.io/gpa-calculator/","applicationCategory":"EducationalApplication","operatingSystem":"Any","inLanguage":["ar","en"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EGP"},"description":"احسب معدلك الفصلي والتراكمي GPA بنظام الساعات المعتمدة في الجامعات المصرية، من الدرجة من 100 أو من التقدير (A, B+...). مجانية وتعمل على الموبايل. Free Egyptian GPA calculator, credit-hour system, 4.0 scale."}</script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:#f1f5f4;color:#10231f;padding-bottom:40px}
 header{background:#0f766e;color:#fff;padding:18px 16px 70px;text-align:center}
@@ -26,7 +35,7 @@ button{font:inherit;border:0;border-radius:10px;cursor:pointer}
 .note{font-size:12px;color:#678;margin:8px 0 0}
 details summary{font-weight:700;cursor:pointer;font-size:15px}
 </style></head><body>
-<header><h1>🎓 حاسبة المعدل التراكمي</h1></header>
+<header><h1>🎓 حاسبة المعدل التراكمي GPA</h1></header>
 <div class="wrap">
 <div class="card"><div class="res">
 <div><b id="sem">0.00</b><span>معدل الفصل</span></div>
@@ -47,6 +56,11 @@ details summary{font-weight:700;cursor:pointer;font-size:15px}
 <div id="scale" class="sc" style="margin-top:10px"></div>
 <h2 style="margin-top:16px">الدرجة من 100 ← النقاط</h2><p class="note">لو كتبت درجتك (مثلاً 85 من 100) تتحول لنقاط حسب النسبة المئوية. عدّل الحد الأدنى والنقاط.</p><div id="ranges" style="margin-top:8px"></div><button class="add sec" onclick="addRange()">+ إضافة نطاق</button><button class="add sec" style="margin-top:12px" onclick="resetScale()">استرجاع الافتراضي</button>
 <button class="add sec" onclick="addGrade()">+ إضافة تقدير</button></details></div>
+<div class="card"><h2>كيف يُحسب المعدل (GPA) في الجامعات المصرية؟</h2>
+<p class="note">تعتمد معظم الجامعات المصرية نظام الساعات المعتمدة. لكل مادة نقاط تقدير حسب درجتك: مثلاً 93 فأكثر = 4.0 (A)، 89 إلى 92 = 3.7 (A-)، 84 إلى 88 = 3.3 (B+)، 80 إلى 83 = 3.0 (B)، 76 إلى 79 = 2.7 (B-)، 73 إلى 75 = 2.3 (C+)، 70 إلى 72 = 2.0 (C)، 67 إلى 69 = 1.7 (C-)، 64 إلى 66 = 1.3 (D+)، 60 إلى 63 = 1.0 (D)، وأقل من 60 = 0 (F).</p>
+<p class="note"><b>معدل الفصل</b> = مجموع (نقاط كل مادة × ساعاتها) ÷ مجموع ساعات الفصل.<br><b>المعدل التراكمي</b> = (نقاط الفصل الحالي + معدلك السابق × ساعاتك السابقة) ÷ إجمالي الساعات.</p>
+<p class="note">اكتب موادك وساعاتها وكل مادة إما بالدرجة من 100 أو بالتقدير، وسيظهر معدلك فوراً. جدول النقاط قابل للتعديل لو جامعتك تختلف قليلاً. تختلف الجداول بين الكليات والجامعات، فراجع لائحة كليتك.</p>
+<p class="note" lang="en" dir="ltr" style="text-align:left">Free GPA calculator for Egyptian universities (credit-hour system, 4.0 scale). Enter each course's hours and score out of 100 or letter grade to get your semester GPA and cumulative GPA. The grade table is editable to match your faculty.</p></div>
 <p class="note" style="text-align:center">بياناتك محفوظة على جهازك فقط · يعمل بدون إنترنت</p>
 </div>
 <script>

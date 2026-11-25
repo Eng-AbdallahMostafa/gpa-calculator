@@ -57,11 +57,12 @@ S.ranges=S.ranges||DR.map(r=>[...r]);
 const $=id=>document.getElementById(id);
 const save=()=>localStorage.setItem('gpa',JSON.stringify(S));
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function mxOf(c){if(c.mx===undefined||c.mx===null||c.mx==='')return 100;return parseFloat(c.mx)}
 function pts(c){
- if(c.m==='s'){const sc=parseFloat(c.sc),mx=parseFloat(c.mx);if(!(mx>0)||isNaN(sc))return null;const p=Math.min(100,sc/mx*100);
+ if(c.m==='s'){const sc=parseFloat(c.sc),mx=mxOf(c);if(!(mx>0)||isNaN(sc))return null;const p=Math.min(100,sc/mx*100);
   const r=[...S.ranges].sort((x,y)=>y[0]-x[0]).find(r=>p>=r[0]);return r?r[1]:0}
  const p=S.scale[c.g];return p===undefined?null:p}
-function pct(c){const sc=parseFloat(c.sc),mx=parseFloat(c.mx);return mx>0&&!isNaN(sc)?(sc/mx*100).toFixed(1):'-'}
+function pct(c){const sc=parseFloat(c.sc),mx=mxOf(c);return mx>0&&!isNaN(sc)?(sc/mx*100).toFixed(1):'-'}
 function render(){
  $('courses').innerHTML=S.courses.map((c,i)=>`<div class="c"><div class="row"><input placeholder="مادة ${i+1}" value="${esc(c.n)}" oninput="S.courses[${i}].n=this.value;upd()">
  <input type="number" min="0" step="0.5" inputmode="decimal" value="${c.h}" oninput="S.courses[${i}].h=this.value;upd()">

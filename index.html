@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
+<title>حاسبة المعدل التراكمي</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:#f1f5f4;color:#10231f;padding-bottom:40px}
+header{background:#0f766e;color:#fff;padding:18px 16px 70px;text-align:center}
+header h1{margin:0;font-size:20px}
+.wrap{max-width:560px;margin:-54px auto 0;padding:0 12px}
+.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #0001}
+.res{display:flex;gap:10px;text-align:center}.res div{flex:1;background:#ecfdf5;border-radius:12px;padding:10px 4px}
+.res b{display:block;font-size:30px;color:#0f766e}.res span{font-size:12px;color:#456}
+h2{font-size:15px;margin:0 0 10px}
+.row{display:grid;grid-template-columns:1fr 62px 34px;gap:6px;margin-bottom:6px}.c{border-bottom:1px solid #e5ece9;padding-bottom:8px;margin-bottom:10px}.r2{display:grid;grid-template-columns:96px 1fr;gap:6px}.r2 .sc2{display:flex;gap:6px;align-items:center}.sc2 span{font-size:13px;color:#456;white-space:nowrap}.pct{font-size:12px;color:#0f766e;margin-top:4px}.rg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;font-size:12px}
+input,select{width:100%;padding:10px 6px;border:1px solid #cbd5d1;border-radius:10px;font:inherit;font-size:15px;background:#fff;text-align:center}
+.row input:first-child{text-align:right}
+.hd{font-size:11px;color:#678;margin-bottom:4px}
+button{font:inherit;border:0;border-radius:10px;cursor:pointer}
+.del{background:#fee2e2;color:#b91c1c;font-size:18px}
+.add{width:100%;padding:12px;background:#0f766e;color:#fff;font-weight:600}
+.sec{background:#e2e8f0;color:#10231f;padding:8px 12px;margin-top:8px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.two label{font-size:12px;color:#456}
+.sc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.sc label{font-size:12px;display:flex;flex-direction:column;gap:2px;text-align:center}
+.sc .g,select{direction:ltr;unicode-bidi:isolate}.sc .g{font-weight:700}
+.note{font-size:12px;color:#678;margin:8px 0 0}
+details summary{font-weight:700;cursor:pointer;font-size:15px}
+</style></head><body>
+<header><h1>🎓 حاسبة المعدل التراكمي</h1></header>
+<div class="wrap">
+<div class="card"><div class="res">
+<div><b id="sem">0.00</b><span>معدل الفصل</span></div>
+<div><b id="cum">0.00</b><span>المعدل التراكمي</span></div>
+<div><b id="hrs">0</b><span>إجمالي الساعات</span></div></div></div>
+
+<div class="card"><h2>مواد هذا الفصل</h2>
+<div class="row hd"><span>المادة</span><span>الساعات</span><span></span></div>
+<div id="courses"></div>
+<button class="add" onclick="addCourse()">+ إضافة مادة</button></div>
+
+<div class="card"><h2>الفصول السابقة (اختياري)</h2>
+<div class="two"><div><label>معدلك التراكمي السابق</label><input id="pg" type="number" step="0.01" min="0" inputmode="decimal" placeholder="0.00"></div>
+<div><label>الساعات المنجزة سابقاً</label><input id="ph" type="number" min="0" inputmode="numeric" placeholder="0"></div></div></div>
+
+<div class="card"><details><summary>⚙️ جدول التقديرات (قابل للتعديل)</summary>
+<p class="note">عدّل النقاط لتناسب جامعتك. القيم الافتراضية: مقياس 4.0 الشائع.</p>
+<div id="scale" class="sc" style="margin-top:10px"></div>
+<h2 style="margin-top:16px">الدرجة من 100 ← النقاط</h2><p class="note">لو كتبت درجتك (مثلاً 85 من 100) تتحول لنقاط حسب النسبة المئوية. عدّل الحد الأدنى والنقاط.</p><div id="ranges" style="margin-top:8px"></div><button class="add sec" onclick="addRange()">+ إضافة نطاق</button><button class="add sec" style="margin-top:12px" onclick="resetScale()">استرجاع الافتراضي</button>
+<button class="add sec" onclick="addGrade()">+ إضافة تقدير</button></details></div>
+<p class="note" style="text-align:center">بياناتك محفوظة على جهازك فقط · يعمل بدون إنترنت</p>
+</div>
+<script>
+const DEF={"A+":4,"A":4,"A-":3.7,"B+":3.3,"B":3,"B-":2.7,"C+":2.3,"C":2,"C-":1.7,"D+":1.3,"D":1,"F":0};
+const DR=[[93,4],[90,3.7],[87,3.3],[83,3],[80,2.7],[77,2.3],[73,2],[70,1.7],[67,1.3],[60,1],[0,0]];
+let S=JSON.parse(localStorage.getItem('gpa')||'null')||{scale:{...DEF},courses:[{n:'',h:3,g:'A'},{n:'',h:3,m:'s',sc:'85',mx:'100'},{n:'',h:3,g:'B'}],pg:'',ph:''};
+S.ranges=S.ranges||DR.map(r=>[...r]);
+const $=id=>document.getElementById(id);
+const save=()=>localStorage.setItem('gpa',JSON.stringify(S));
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function pts(c){
+ if(c.m==='s'){const sc=parseFloat(c.sc),mx=parseFloat(c.mx);if(!(mx>0)||isNaN(sc))return null;const p=Math.min(100,sc/mx*100);
+  const r=[...S.ranges].sort((x,y)=>y[0]-x[0]).find(r=>p>=r[0]);return r?r[1]:0}
+ const p=S.scale[c.g];return p===undefined?null:p}
+function pct(c){const sc=parseFloat(c.sc),mx=parseFloat(c.mx);return mx>0&&!isNaN(sc)?(sc/mx*100).toFixed(1):'-'}
+function render(){
+ $('courses').innerHTML=S.courses.map((c,i)=>`<div class="c"><div class="row"><input placeholder="مادة ${i+1}" value="${esc(c.n)}" oninput="S.courses[${i}].n=this.value;upd()">
+ <input type="number" min="0" step="0.5" inputmode="decimal" value="${c.h}" oninput="S.courses[${i}].h=this.value;upd()">
+ <button class="del" onclick="S.courses.splice(${i},1);render()">×</button></div>
+ <div class="r2"><select onchange="S.courses[${i}].m=this.value;render()"><option value="g" ${c.m!=='s'?'selected':''}>تقدير</option><option value="s" ${c.m==='s'?'selected':''}>درجة</option></select>
+ ${c.m==='s'?`<div class="sc2"><input type="number" min="0" inputmode="decimal" placeholder="درجتك" value="${c.sc??''}" oninput="S.courses[${i}].sc=this.value;upd()"><span>من</span><input type="number" min="1" inputmode="decimal" placeholder="100" value="${c.mx??100}" oninput="S.courses[${i}].mx=this.value;upd()"></div>`
+ :`<select onchange="S.courses[${i}].g=this.value;upd()">${Object.keys(S.scale).map(g=>`<option ${g==c.g?'selected':''}>${esc(g)}</option>`).join('')}</select>`}</div>
+ ${c.m==='s'?`<div class="pct" id="pc${i}"></div>`:''}</div>`).join('');
+ $('scale').innerHTML=Object.entries(S.scale).map(([g,p])=>`<label><span class="g">${esc(g)}</span><input type="number" step="0.01" inputmode="decimal" value="${p}" oninput="S.scale['${g.replace(/'/g,"")}']=parseFloat(this.value)||0;upd()"></label>`).join('');
+ $('ranges').innerHTML=S.ranges.map((r,i)=>`<div class="rg"><label>من % فما فوق<input type="number" inputmode="decimal" value="${r[0]}" oninput="S.ranges[${i}][0]=parseFloat(this.value)||0;upd()"></label><label>النقاط<input type="number" step="0.01" inputmode="decimal" value="${r[1]}" oninput="S.ranges[${i}][1]=parseFloat(this.value)||0;upd()"></label></div>`).join('');
+ $('pg').value=S.pg;$('ph').value=S.ph;upd();
+}
+function upd(){
+ let t=0,h=0;
+ S.courses.forEach((c,i)=>{const x=parseFloat(c.h)||0,p=pts(c);if(x>0&&p!==null){t+=x*p;h+=x}
+  const e=document.getElementById('pc'+i);if(e)e.textContent=p===null?'':`${pct(c)}% ← ${p} نقطة`});
+ const pg=parseFloat(S.pg)||0,ph=parseFloat(S.ph)||0;
+ $('sem').textContent=h?(t/h).toFixed(2):'0.00';
+ const T=h+ph;$('cum').textContent=T?((t+pg*ph)/T).toFixed(2):'0.00';
+ $('hrs').textContent=T;save();
+}
+function addRange(){S.ranges.push([0,0]);render()}
+function addCourse(){S.courses.push({n:'',h:3,g:Object.keys(S.scale)[0]});render()}
+function resetScale(){S.scale={...DEF};S.ranges=DR.map(r=>[...r]);render()}
+function addGrade(){const g=prompt('اسم التقدير (مثلاً: ممتاز)');if(g&&!(g in S.scale)){S.scale[g]=0;render()}}
+$('pg').oninput=e=>{S.pg=e.target.value;upd()};$('ph').oninput=e=>{S.ph=e.target.value;upd()};
+render();
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+</script></body></html>
